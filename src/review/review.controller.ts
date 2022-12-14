@@ -6,7 +6,10 @@ import {
   Param,
   Patch,
   Post,
+  Request,
+  UseGuards
 } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 import { ReviewService } from './review.service';
@@ -15,9 +18,17 @@ import { ReviewService } from './review.service';
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createReviewDto: CreateReviewDto) {
-    return this.reviewService.create(createReviewDto);
+  create(@Body() createReviewDto: CreateReviewDto, @Request() req: any) {
+    const { userId } = req.user;
+
+    const data = {
+      ...createReviewDto,
+      userId,
+    };
+
+    return this.reviewService.create(data);
   }
 
   @Get()

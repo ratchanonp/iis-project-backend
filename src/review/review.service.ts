@@ -14,12 +14,24 @@ export class ReviewService {
   }
 
   async findAll() {
-    return this.prisma.review.findMany();
+    return this.prisma.review.findMany({
+      include: {
+        user: true,
+        restaurant: {
+          include: {
+            Cafeteria: true,
+          },
+        },
+      },
+    });
   }
 
   async findOne(id: string): Promise<Review | null> {
     const review = this.prisma.review.findUnique({
       where: { id },
+      include: {
+        restaurant: true,
+      },
     });
 
     if (!review) {

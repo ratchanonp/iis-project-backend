@@ -21,14 +21,13 @@ model User {
 }
 
 model Cafeteria {
-  id    String @id @default(cuid())
-  title String
-  map   String
+  id        String @id @default(cuid())
+  title     String
+  eng_title String
+  map       String
+  imageUrl  String
 
   restaurant Restaurant[]
-
-  createAt DateTime @default(now())
-  updateAt DateTime @updatedAt
 }
 
 model Restaurant {
@@ -39,8 +38,10 @@ model Restaurant {
   open  String
   tel   String
 
-  Review      Review[]
-  Cafeteria   Cafeteria? @relation(fields: [cafeteriaId], references: [id])
+  imageUrl String
+
+  review      Review[]
+  cafeteria   Cafeteria? @relation(fields: [cafeteriaId], references: [id])
   cafeteriaId String?
 }
 
@@ -54,4 +55,7 @@ model Review {
   price        Int
   rating       Int
   comment      String
+
+  createAt DateTime @default(now())
+  updateAt DateTime @default(now()) @updatedAt
 }

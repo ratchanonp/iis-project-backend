@@ -28,12 +28,16 @@ export class CafeteriaService {
   }
 
   async cafeteria(
-    cafeteriaWhereUniqueInput: Prisma.CafeteriaWhereUniqueInput,
+    cafeteriaWhereUniqueInput: Prisma.CafeteriaWhereUniqueInput
   ): Promise<Cafeteria | null> {
     return this.prisma.cafeteria.findUnique({
       where: cafeteriaWhereUniqueInput,
       include: {
-        restaurant: true,
+        restaurant: {
+          include: {
+            cafeteria: true,
+          },
+        },
       },
     });
   }

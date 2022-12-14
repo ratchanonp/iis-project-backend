@@ -37,10 +37,34 @@ export class UserService {
       where: {
         id: id,
       },
+      include: {
+        Review: true,
+      },
     });
 
     if (!user) {
-      throw new Error(`User #${id} not found`);
+      throw new NotFoundException(`User #${id} not found`);
+    }
+
+    return user;
+  }
+
+  async findOneProfile(id: string): Promise<User | null> {
+    const user = this.prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        Review: {
+          include: {
+            restaurant: true,
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User #${id} not found`);
     }
 
     return user;
